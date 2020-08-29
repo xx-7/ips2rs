@@ -65,12 +65,11 @@ pub fn run(file: &str) -> Result<Vec<String>, Box<dyn Error>> {
 }
 
 pub fn read_as_ips(conf: &Conf) -> Result<Vec<String>, Box<dyn Error>> {
-    let mut result = Vec::new();
     let contents = fs::read_to_string(format!("{}.txt", conf.asno))?;
-    for ip in contents.trim().split(" ") {
-        if ip.trim().len() >= 7 {
-            result.push(ip.trim().to_owned());
-        }
-    }
-    Ok(result)
+    Ok(contents
+        .trim()
+        .split(" ")
+        .filter(|ip| ip.len() >= 7)
+        .map(|ip| ip.trim().to_owned())
+        .collect())
 }
